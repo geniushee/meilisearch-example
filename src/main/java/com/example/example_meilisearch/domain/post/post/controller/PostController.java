@@ -2,14 +2,17 @@ package com.example.example_meilisearch.domain.post.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meilisearch.sdk.Client;
-import com.meilisearch.sdk.Config;
 import com.meilisearch.sdk.Index;
+import com.meilisearch.sdk.SearchRequest;
+import com.meilisearch.sdk.model.SearchResult;
+import com.meilisearch.sdk.model.Searchable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 @RequestMapping("/post")
 public class PostController {
+    // 빈으로 등록
+    private final Client client;
 
     @Data
     @AllArgsConstructor
@@ -45,8 +50,7 @@ public class PostController {
             // List를 JSON 문자열로 변환
             String documents = objectMapper.writeValueAsString(movies);
 
-            // Meilisearch 클라이언트 설정
-            Client client = new Client(new Config("http://localhost:7700", "masterKey"));
+            // Meilisearch index 설정
             Index index = client.index("movies");
 
             // 문서 추가
@@ -56,6 +60,36 @@ public class PostController {
             return "실패";
         }
 
+        return "성공";
+    }
+
+    @ResponseBody
+    @GetMapping("/search")
+    public SearchResult search(@RequestParam(name = "kw") String kw){
+        Index index = client.index("movies");
+        return index.search(kw);
+    }
+
+    @ResponseBody
+    @GetMapping("/customSearch")
+    public Searchable customSearch(@RequestParam(name = "kw") String kw){
+        Index index = client.index("movies");
+        Searchable results = index.search(
+                new SearchRequest(kw)
+                .setShowMatchesPosition(true)
+                .setAttributesToHighlight(new String[]{"title"}));
+        return results;
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteIndex")
+    public String deleteIndex(@RequestParam(name = "index") String indexName){
+        // 인덱스의 모든 도큐먼트를 삭제하는 방법
+//        Index index = client.index(indexName);
+//        index.deleteAllDocuments();
+
+        //클라이언트에서 인덱스 자체를 삭제하는 방법
+        client.deleteIndex(indexName);
         return "성공";
     }
 }
