@@ -7,6 +7,7 @@ import com.example.example_meilisearch.global.meiliSearch.MeiliConfig;
 import com.example.example_meilisearch.global.ut.Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.meilisearch.sdk.Index;
+import com.meilisearch.sdk.model.Results;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +40,11 @@ public class PostDocumentRepository {
 
     public void clear() {
         getIndex().deleteAllDocuments();
+    }
+
+    public Results<PostDocument> findAll() {
+        Results<PostDocument> posts = getIndex().getDocuments(PostDocument.class);
+
+        return posts;
     }
 }

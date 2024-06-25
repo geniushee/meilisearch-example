@@ -1,8 +1,10 @@
 package com.example.example_meilisearch.domain.post.postDocument.service;
 
 import com.example.example_meilisearch.domain.post.post.dto.PostDto;
+import com.example.example_meilisearch.domain.post.postDocument.entity.PostDocument;
 import com.example.example_meilisearch.domain.post.postDocument.repository.PostDocumentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.meilisearch.sdk.model.Results;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,5 +21,10 @@ public class PostDocumentService {
 
     public void indexClear(){
         postDocumentRepository.clear();
+    }
+
+    public Results<PostDocument> findAll() {
+        Results<PostDocument> posts = postDocumentRepository.findAll();
+        return posts;
     }
 }

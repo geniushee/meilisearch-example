@@ -3,11 +3,15 @@ package com.example.example_meilisearch.domain.post.postDocument.entity;
 import com.example.example_meilisearch.domain.member.member.entity.Member;
 import com.example.example_meilisearch.domain.post.post.dto.PostDto;
 import com.example.example_meilisearch.domain.post.post.entity.Post;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostDocument {
     private Long id;
     private LocalDateTime createdTime;

@@ -17,6 +17,8 @@ public abstract class BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
+    private String modelName; //meilisearch 사용시 Json 역직렬화에서 문제가 발생하여 필드를 명시
+
     public String getModelName(){
         String name = this.getClass().getSimpleName();
         return Character.toUpperCase(name.charAt(0)) + name.substring(1);
