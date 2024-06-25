@@ -36,5 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+### custom ###
+db_dev.mv.db
+
 ### docker volume ###
 meili_data
