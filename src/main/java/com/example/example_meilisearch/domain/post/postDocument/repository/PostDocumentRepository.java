@@ -2,6 +2,7 @@ package com.example.example_meilisearch.domain.post.postDocument.repository;
 
 import com.example.example_meilisearch.domain.post.post.dto.PostDto;
 import com.example.example_meilisearch.domain.post.postDocument.entity.PostDocument;
+import com.example.example_meilisearch.global.app.AppConfig;
 import com.example.example_meilisearch.global.meiliSearch.MeiliConfig;
 import com.example.example_meilisearch.global.ut.Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,8 +17,15 @@ public class PostDocumentRepository {
     private final MeiliConfig meiliConfig;
     private Index postIndex;
 
+    public String getIndexName(){
+        String indexName = "post";
+        if(AppConfig.isTest()) indexName += "Test";
+        return indexName;
+    }
+
     public Index getIndex(){
-        if(postIndex == null) postIndex = meiliConfig.meiliSearchClient().index("post");
+        if(postIndex == null) postIndex = meiliConfig.meiliSearchClient().index(getIndexName());
+
         return postIndex;
     }
 
