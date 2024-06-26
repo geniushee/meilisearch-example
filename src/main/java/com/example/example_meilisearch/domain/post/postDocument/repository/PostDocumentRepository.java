@@ -7,9 +7,13 @@ import com.example.example_meilisearch.global.meiliSearch.MeiliConfig;
 import com.example.example_meilisearch.global.ut.Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.meilisearch.sdk.Index;
+import com.meilisearch.sdk.SearchRequest;
 import com.meilisearch.sdk.model.Results;
+import com.meilisearch.sdk.model.Searchable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,11 +44,20 @@ public class PostDocumentRepository {
 
     public void clear() {
         getIndex().deleteAllDocuments();
+        getIndex().resetSortableAttributesSettings();
+        getIndex().updateSortableAttributesSettings(new String[]{"id"});
     }
 
     public Results<PostDocument> findAll() {
         Results<PostDocument> posts = getIndex().getDocuments(PostDocument.class);
 
         return posts;
+    }
+
+    public List<PostDocument> findAllByOrderByIdDesc() {
+
+        SearchRequest request = new SearchRequest("").setSort(new String[]{"id:desc"});
+        Searchable results = getIndex().search(request);
+        return results.getHits().stream().map(hit -> Util.Json.toObject(hit, PostDocument.class)).toList();
     }
 }
