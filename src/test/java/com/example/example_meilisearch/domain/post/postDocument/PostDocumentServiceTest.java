@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,5 +55,14 @@ public class PostDocumentServiceTest {
         assertThat(postDoc.getId()).isEqualTo(id).as("id 확인");
         assertThat(postDoc.getTitle()).isEqualTo(title).as("title 확인");
         assertThat(postDoc.getContent()).isEqualTo(content).as("content 확인");
+    }
+
+    @Test
+    @DisplayName("findById")
+    public void test3(){
+        Optional<PostDocument> opPost = postDocumentService.findById(1L);
+        assertThat(opPost.isPresent()).isTrue();
+
+        checkPostDoc(opPost.get(), 1L, "title1", "content1");
     }
 }

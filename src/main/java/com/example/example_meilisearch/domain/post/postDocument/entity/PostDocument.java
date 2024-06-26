@@ -6,12 +6,14 @@ import com.example.example_meilisearch.domain.post.post.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class PostDocument {
     private Long id;
     private LocalDateTime createdTime;

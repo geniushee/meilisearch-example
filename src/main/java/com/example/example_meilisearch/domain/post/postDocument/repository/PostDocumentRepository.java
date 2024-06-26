@@ -8,12 +8,14 @@ import com.example.example_meilisearch.global.ut.Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.meilisearch.sdk.Index;
 import com.meilisearch.sdk.SearchRequest;
+import com.meilisearch.sdk.exceptions.MeilisearchException;
 import com.meilisearch.sdk.model.Results;
 import com.meilisearch.sdk.model.Searchable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,5 +61,18 @@ public class PostDocumentRepository {
         SearchRequest request = new SearchRequest("").setSort(new String[]{"id:desc"});
         Searchable results = getIndex().search(request);
         return results.getHits().stream().map(hit -> Util.Json.toObject(hit, PostDocument.class)).toList();
+    }
+
+
+    public Optional<PostDocument> findById(Long id) {
+        try {
+            // 없는 자료를 찾을 때는 에러가 발생하는데 에러의 내용이 별도의 에러 객체가 생성되면서 PostDocument에 포함되지 않는 필드를 요구함.
+            // 별도의 처리 방법이 필요.
+            PostDocument postDoc = getIndex().getDocument(String.valueOf(id), PostDocument.class);
+            return Optional.ofNullable(postDoc);
+        }catch (MeilisearchException ignored){
+
+        }
+        return Optional.empty();
     }
 }
